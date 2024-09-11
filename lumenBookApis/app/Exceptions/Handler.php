@@ -2,15 +2,20 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
     /**
      * A list of the exception types that should not be reported.
      *
@@ -28,12 +33,12 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Throwable  $exception
+     * @param Throwable $exception
      * @return void
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $exception): void
     {
         parent::report($exception);
     }
@@ -41,14 +46,27 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     * @param Throwable $exception
+     * @return \Illuminate\Http\Response|JsonResponse
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $exception): \Illuminate\Http\Response|JsonResponse
     {
-        return parent::render($request, $exception);
+        if($exception instanceof HttpException){
+            $code = $exception->getStatusCode();
+            $message = Response::$statusTexts[$code];
+            return $this->errorResponse($message, $code);
+        }
+        if($exception instanceof ModelNotFoundException){
+            $model = strtolower(class_basename($exception->getModel()));
+            $message = 'No '. $model . ' found with this id';
+            return $this->errorResponse($message, Response::HTTP_NOT_FOUND);
+        }
+        if(env('APP_DEBUG', false)){
+            return parent::render($request, $exception);
+        }
+        return $this->errorResponse('Internal Server Error', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
