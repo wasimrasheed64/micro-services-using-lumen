@@ -2,7 +2,8 @@
 
 namespace App\Exceptions;
 
-use App\ApiResponse;
+
+
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -14,6 +15,7 @@ use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use App\Traits\ApiResponse;
 
 class Handler extends ExceptionHandler
 {

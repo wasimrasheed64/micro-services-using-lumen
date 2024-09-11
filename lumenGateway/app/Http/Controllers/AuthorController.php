@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuthorService;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-
 class AuthorController extends Controller
 {
+    use ApiResponse;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(private readonly  AuthorService $service)
+    {}
 
     //
 
@@ -23,7 +23,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        // TODO: Implement index() method.
+        return $this->validResponse($this->service->obtainAuthors());
     }
 
     /**
@@ -32,7 +32,7 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        // TODO: Implement show() method.
+        return $this->validResponse($this->service->obtainAuthor($id));
     }
 
     /**
@@ -41,7 +41,7 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement store() method.
+        return $this->validResponse($this->service->createAuthor($request->all()));
     }
 
     /**
@@ -51,7 +51,7 @@ class AuthorController extends Controller
      */
     public function update($id, Request $request)
     {
-        // TODO: Implement update() method.
+        return $this->validResponse($this->service->editAuthor($id, $request->all()));
     }
 
     /**
@@ -60,6 +60,6 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
-        // TODO: Implement destroy() method.
+        return $this->validResponse($this->service->deleteAuthor($id));
     }
 }
