@@ -8,6 +8,7 @@ use App\Models\Author;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthorController extends Controller implements ControllerInterface
 {
@@ -33,7 +34,7 @@ class AuthorController extends Controller implements ControllerInterface
      */
     public function show($id)
     {
-        $author = $this->model::find($id);
+        $author = $this->model::findOrFail($id);
         return $this->successDataResponse($author);
     }
 
@@ -67,11 +68,9 @@ class AuthorController extends Controller implements ControllerInterface
             'country' => 'required|max:120',
         ]);
         try {
-            $author = $this->model::find($id);
-            if(!$author) throw new ModelNotFoundException('Author was not found');
-
+            $author = $this->model::findOrFail($id);
             $author->update($request->only('name','gender','country'));
-            return $this->successMessageResponse('Author updated successfully');
+            return $this->successMessageResponse('Author updated successfully',Response::HTTP_CREATED);
 
         } catch (\Exception $exception) {
             return $this->errorResponse([$exception->getMessage()]);
@@ -83,11 +82,9 @@ class AuthorController extends Controller implements ControllerInterface
      */
     public function destroy($id)
     {
-       $author = $this->model::find($id);
-       if($author){
-           $author->delete();
-           return $this->successMessageResponse('Author deleted');
-       }
-       return $this->errorResponse('Author was not found', 404);
+       $author = $this->model::findOrFail($id);
+       $author->delete();
+       return $this->successMessageResponse('Author deleted');
+
     }
 }
