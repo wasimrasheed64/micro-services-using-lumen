@@ -5,6 +5,7 @@ use App\Traits\ConsumesExternalService;
 use GuzzleHttp\Exception\GuzzleException;
 
 
+
 class AuthorService
 {
     use ConsumesExternalService;
@@ -17,7 +18,7 @@ class AuthorService
 
     public function __construct()
     {
-        $this->baseUri = config('services.authors.base_uri');
+        $this->baseUri = config('app.authors.base_uri');
     }
 
     /**

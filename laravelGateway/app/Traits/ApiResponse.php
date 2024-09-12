@@ -3,6 +3,7 @@
 namespace  App\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Laravel\Lumen\Http\ResponseFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 trait ApiResponse
@@ -41,9 +42,9 @@ trait ApiResponse
      * Build valid response
      * @param array|string $data
      * @param int $code
-     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     * @return \Illuminate\Http\Response|ResponseFactory
      */
-    public function validResponse(array|string $data, int $code = Response::HTTP_OK): \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+    public function validResponse(array|string $data, int $code = Response::HTTP_OK): \Illuminate\Http\Response|ResponseFactory
     {
         return response($data, $code)->header('Content-Type', 'application/json');
     }
