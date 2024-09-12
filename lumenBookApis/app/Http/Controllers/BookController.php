@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\ApiResponse;
 use App\Contracts\ControllerInterface;
 use App\Models\Book;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class BookController extends Controller implements ControllerInterface
 {

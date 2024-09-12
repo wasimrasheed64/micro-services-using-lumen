@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\ApiResponse;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -78,13 +78,11 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof ValidationException) {
             $errors = $exception->validator->errors()->getMessages();
-
             return $this->errorResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if(env('APP_DEBUG', false)){
             return parent::render($request, $exception);
         }
         return $this->errorResponse('Internal Server Error', Response::HTTP_INTERNAL_SERVER_ERROR);
-        /* return parent::render($request, $exception); */
     }
 }

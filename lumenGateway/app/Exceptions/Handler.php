@@ -5,6 +5,7 @@ namespace App\Exceptions;
 
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,7 +16,7 @@ use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
-use App\Traits\ApiResponse;
+use Traits\ApiResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
      *
      * @param  Request  $request
      * @param Throwable $exception
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory | JsonResponse
      *
      * @throws Throwable
      */
@@ -83,6 +84,13 @@ class Handler extends ExceptionHandler
 
             return $this->errorResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        if ($exception instanceof ClientException) {
+            $message = $exception->getResponse()->getBody();
+            $code = $exception->getCode();
+            return $this->errorMessage($message, $code);
+        }
+
         if(env('APP_DEBUG', false)){
             return parent::render($request, $exception);
         }

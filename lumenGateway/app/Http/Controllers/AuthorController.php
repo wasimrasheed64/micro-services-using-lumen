@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthorService;
-use App\Traits\ApiResponse;
+use app\Services\AuthorService;
 use Illuminate\Http\Request;
+use Traits\ApiResponse;
+
 class AuthorController extends Controller
 {
     use ApiResponse;

@@ -13,9 +13,9 @@ trait ApiResponse
      * @return JsonResponse
      */
     public function successDataResponse($data, int $statusCode = Response::HTTP_OK): JsonResponse
-{
-    return response()->json(['data'=>$data], $statusCode);
-}
+    {
+        return response()->json(['data' => $data], $statusCode);
+    }
 
     /**
      * @param $message
@@ -23,9 +23,9 @@ trait ApiResponse
      * @return JsonResponse
      */
     public function successMessageResponse($message, int $statusCode = Response::HTTP_OK): JsonResponse
-{
-    return response()->json(['message'=>$message], $statusCode);
-}
+    {
+        return response()->json(['message' => $message], $statusCode);
+    }
 
     /**
      * @param $message
@@ -33,8 +33,8 @@ trait ApiResponse
      * @return JsonResponse
      */
     public function errorResponse($message, int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
-{
-    return response()->json(['error'=> $message,'code' => $statusCode], $statusCode);
-}
+    {
+        return response()->json(['error' => $message, 'code' => $statusCode], $statusCode);
+    }
 }
 

@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use app\Services\AuthorService;
+use app\Services\BookService;
 use Illuminate\Http\Request;
+use Traits\ApiResponse;
 
 class BookController extends Controller
 {
+    use ApiResponse;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(private readonly  BookService $service,
+    private readonly  AuthorService $authorService)
+    {}
 
     //
 
@@ -23,7 +26,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        // TODO: Implement index() method.
+        return $this->validResponse($this->service->obtainBooks());
     }
 
     /**
@@ -32,7 +35,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        // TODO: Implement show() method.
+        return $this->validResponse($this->service->obtainBook($id));
     }
 
     /**
@@ -41,7 +44,8 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement store() method.
+        $this->authorService->obtainAuthor($request->get('author_id'));
+        return $this->validResponse($this->service->createBook($request->all()));
     }
 
     /**
@@ -51,7 +55,7 @@ class BookController extends Controller
      */
     public function update($id, Request $request)
     {
-        // TODO: Implement update() method.
+        return $this->validResponse($this->service->editBook($id, $request->all()));
     }
 
     /**
@@ -60,6 +64,6 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        // TODO: Implement destroy() method.
+        return $this->validResponse($this->service->deleteBook($id));
     }
 }
