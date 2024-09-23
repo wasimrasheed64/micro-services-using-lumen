@@ -14,10 +14,15 @@ class BookService
      * @var string
      */
     public $baseUri;
+    public $secret;
+    public $salt = "Alpha";
+    public  $hashedSalt ;
 
     public function __construct()
     {
         $this->baseUri = config('app.books.base_uri');
+        $this->secret = config('app.books.secret');
+        $this->hashedSalt = hash_hmac('sha256', $this->salt, $this->secret);
     }
     /**
      * @throws GuzzleException

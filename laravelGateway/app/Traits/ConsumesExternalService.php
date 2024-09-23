@@ -12,9 +12,14 @@ trait ConsumesExternalService
      */
     public function performRequest($method, $url, $payload = [], $headers = []): string
     {
+
         $client = new Client([
             'base_uri' => $this->baseUri,
         ]);
+
+        if(isset($this->secret)){
+            $headers['Authorization'] = $this->hashedSalt;
+        }
 
         $response = $client->request($method, $url, [
             'headers' => $headers,
